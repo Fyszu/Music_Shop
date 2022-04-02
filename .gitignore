@@ -6,6 +6,9 @@
 # My files to ignore
 appsettings.json
 appsettings.Development.json
+/Music_Shop/appsettings.Development.json
+/appsettings.Development.json
+
 
 # User-specific files
 *.rsuser

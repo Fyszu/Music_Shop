@@ -7,5 +7,10 @@
         public string Description { get; set; } 
         public Artist Owner { get; set; }
         public float Price { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
+        public Album()
+        {
+            Transactions = new HashSet<Transaction>();
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Music_Shop.Repositories
 
         public async Task<User> GetById(string id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users.Include(u => u.Transactions).Where(u => u.Id.Equals(id)).SingleOrDefaultAsync();
         }
 
         public async Task Add(User user)
@@ -46,12 +46,12 @@ namespace Music_Shop.Repositories
 
         public async Task<List<User>> GetAll()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u => u.Transactions).ToListAsync();
         }
 
         public async Task<User> GetByName(string name)
         {
-            return await _context.Users.Where(u => u.UserName == name).SingleOrDefaultAsync();
+            return await _context.Users.Include(u => u.Transactions).Where(u => u.UserName == name).SingleOrDefaultAsync();
         }
     }
 }

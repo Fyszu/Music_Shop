@@ -14,7 +14,7 @@ namespace Music_Shop.Repositories
 
         public async Task<Album> GetById(int id)
         {
-            return await _context.Albums.Include(album => album.Owner).Where(album => album.Id == id).SingleOrDefaultAsync();
+            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).Where(album => album.Id == id).SingleOrDefaultAsync();
         }
 
         public async Task Add(Album album)
@@ -47,22 +47,22 @@ namespace Music_Shop.Repositories
 
         public async Task<List<Album>> GetAll()
         {
-            return await _context.Albums.Include(album => album.Owner).ToListAsync();
+            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).ToListAsync();
         }
 
         public async Task<Album> GetByName(string name)
         {
-            return await _context.Albums.Include(album => album.Owner).Where(a => a.Name == name).SingleOrDefaultAsync();
+            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).Where(a => a.Name == name).SingleOrDefaultAsync();
         }
 
         public async Task<List<Album>> GetByOwner(Artist owner)
         {
-            return await _context.Albums.Include(album => album.Owner).Where(album => album.Owner.Equals(owner)).ToListAsync();
+            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).Where(album => album.Owner.Equals(owner)).ToListAsync();
         }
 
         public async Task<List<Album>> GetByPrice(float price)
         {
-            return await _context.Albums.Include(album => album.Owner).Where(album => album.Price == price).ToListAsync();
+            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).Where(album => album.Price == price).ToListAsync();
         }
     }
 }

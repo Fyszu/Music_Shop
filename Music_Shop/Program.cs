@@ -41,9 +41,11 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IAlbumService, AlbumService>();
 builder.Services.AddTransient<IArtistService, ArtistService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ITransactionService, TransactionService>();
 builder.Services.AddScoped<AlbumRepository, AlbumRepository>();
 builder.Services.AddScoped<ArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<UserRepository, UserRepository>();
+builder.Services.AddScoped<TransactionRepository, TransactionRepository>();
 
 builder.Services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddRazorPages();

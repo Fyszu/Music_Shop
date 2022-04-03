@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Music_Shop.Data;
 using Music_Shop.Services;
 using System.Configuration;
+using System.Text;
 using System.Web;
 
 namespace Music_Shop.Pages
@@ -13,18 +14,22 @@ namespace Music_Shop.Pages
     {
         private User _currentUser;
         private IUserService _userService;
+        private ITransactionService _transactionService;
         private readonly IConfiguration _configuration;
         private readonly string _merchantKey;
         private readonly string _salt;
         private readonly string _payuBaseUrl;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PaymentModel(IUserService userService, IConfiguration configuration)
+        public PaymentModel(IUserService userService, ITransactionService transactionService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
+            _transactionService = transactionService;
             _configuration = configuration;
             _merchantKey = _configuration.GetValue<string>("MerchantKey");
             _salt = _configuration.GetValue<string>("Salt");
             _payuBaseUrl = _configuration.GetValue<string>("PayUBaseUrl");
+            _httpContextAccessor = httpContextAccessor;
         }
         public async void OnGet()
         {
@@ -33,33 +38,27 @@ namespace Music_Shop.Pages
 
         public void PayNow()
         {
-            tokenContext.setPaymentMessageSession(null);
-            ViewData["PaymentMessage"] = null;
-            if (_currentUser != null)
-            {
-                string firstName = _currentUser.UserName;
-                string productInfo = "Lab Product Purchase Online";
-                string email = _currentUser.Email;
-                RemotePost myremotepost = new RemotePost();
-                var DomainName = HttpContext.Request.Host;
-                //posting all the parameters required for integration.
-                myremotepost.Url = _payuBaseUrl;
-                myremotepost.Add("key", _merchantKey);
-                string txnid = Generatetxnid();
-                myremotepost.Add("txnid", txnid);
-                myremotepost.Add("amount", 1);
-                myremotepost.Add("productinfo", productInfo);
-                myremotepost.Add("firstname", firstName);
-                myremotepost.Add("email", email);
-                myremotepost.Add("surl", "http://" + DomainName + "/User/Return");//Change the success url here depending upon the port number of your local system.
-                myremotepost.Add("furl", "http://" + DomainName + "/User/Return");//Change the failure url here depending upon the port number of your local system.
-                myremotepost.Add("service_provider", "payu_paisa");
+            string albumDetails = "TBC";
+            RemotePost myRemotePost = new RemotePost(_httpContextAccessor);
+            var DomainName = _httpContextAccessor.HttpContext.Request.Host;
+            string txnid = _transactionService.Generatetxnid();
 
-                string hashString = _merchantKey + "|" + txnid + "|" + 1 + "|" + productInfo + "|" + firstName + "|" + email + "|||||||||||" + _salt;
-                string hash = Generatehash512(hashString);
-                myremotepost.Add("hash", hash);
-                myremotepost.Post();
-            }
+            //Posting all the parameters required for payment.
+            myRemotePost.Url = _payuBaseUrl;
+            myRemotePost.Add("key", _merchantKey);
+            myRemotePost.Add("txnid", txnid);
+            myRemotePost.Add("amount", "1");
+            myRemotePost.Add("productinfo", albumDetails);
+            myRemotePost.Add("firstname", _currentUser.UserName);
+            myRemotePost.Add("email", _currentUser.Email);
+            myRemotePost.Add("surl", "http://" + DomainName + "/User/Return"); //Change the success url here depending upon the port number of your local system.
+            myRemotePost.Add("furl", "http://" + DomainName + "/User/Return"); //Change the failure url here depending upon the port number of your local system.
+            myRemotePost.Add("service_provider", "payu_paisa");
+
+            string hashString = _merchantKey + "|" + txnid + "|" + 1 + "|" + albumDetails + "|" + _currentUser.UserName + "|" + _currentUser.Email + "|||||||||||" + _salt;
+            string hash = _transactionService.Generatehash512(hashString);
+            myRemotePost.Add("hash", hash);
+            myRemotePost.Post();
         }
 
         [AllowAnonymous]
@@ -76,19 +75,19 @@ namespace Music_Shop.Pages
                 {
                     merc_hash_vars_seq = hash_seq.Split('|');
                     Array.Reverse(merc_hash_vars_seq);
-                    merc_hash_string = ConfigurationManager.AppSettings["SALT"] + "|" + form["status"].ToString();
+                    merc_hash_string = _salt + "|" + form["status"].ToString();
                     foreach (string merc_hash_var in merc_hash_vars_seq)
                     {
                         merc_hash_string += "|";
-                        merc_hash_string = merc_hash_string + (form[merc_hash_var] != null ? form[merc_hash_var] : "");
+                        merc_hash_string = merc_hash_string + (String.IsNullOrEmpty(form[merc_hash_var]) ? "" : form[merc_hash_var]);
                     }
-                    Response.Write(merc_hash_string);
-                    merc_hash = Generatehash512(merc_hash_string).ToLower();
+                    _httpContextAccessor.HttpContext.Response.Body.Write(Encoding.UTF8.GetBytes(merc_hash_string));
+                    merc_hash = _transactionService.Generatehash512(merc_hash_string).ToLower();
                     order_id = Request.Form["txnid"];
                 }
                 else
                 {
-                    tokenContext.setPaymentMessageSession("Payment Fails! Order Pending to save.");
+                    //tokenContext.setPaymentMessageSession("Payment Fails! Order Pending to save.");
                 }
             }
             catch (Exception ex)
@@ -96,6 +95,43 @@ namespace Music_Shop.Pages
                 ViewData["PaymentMessage"] = "Payment Fails! Order Pending to save.";
             }
             return RedirectToAction("ActionName");
+        }
+
+
+        public class RemotePost
+        {
+            private System.Collections.Specialized.NameValueCollection Inputs = new System.Collections.Specialized.NameValueCollection();
+
+            public string Url = "";
+            public string Method = "post";
+            public string FormName = "form1";
+            private readonly IHttpContextAccessor _httpContextAccessor;
+
+            public RemotePost(IHttpContextAccessor httpContextAccessor)
+            {
+                _httpContextAccessor = httpContextAccessor;
+            }
+            public void Add(string name, string value)
+            {
+                Inputs.Add(name, value);
+            }
+
+            public async void Post()
+            {
+                _httpContextAccessor.HttpContext.Response.Clear();
+
+                await _httpContextAccessor.HttpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes("<html><head>"));
+                await _httpContextAccessor.HttpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(string.Format("</head><body onload=\"document.{0}.submit()\">", FormName)));
+                await _httpContextAccessor.HttpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" >", FormName, Method, Url)));
+                for (int i = 0; i < Inputs.Keys.Count; i++)
+                {
+                    await _httpContextAccessor.HttpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", Inputs.Keys[i], Inputs[Inputs.Keys[i]])));
+                }
+                await _httpContextAccessor.HttpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes("</form>"));
+                await _httpContextAccessor.HttpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes("</body></html>"));
+
+                //_httpContextAccessor.HttpContext.Response.Body.EndWrite();
+            }
         }
     }
 

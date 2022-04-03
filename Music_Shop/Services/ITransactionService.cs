@@ -8,5 +8,8 @@ namespace Music_Shop.Services
         Task<List<Transaction>> GetByAlbum(Album album);
         Task<List<Transaction>> GetByDateTime(DateTime dateTime);
         Task<List<Transaction>> GetByPrice(float price);
+        public string Generatetxnid();
+        public string Generatehash512(string text);
+
     }
 }

@@ -34,7 +34,7 @@ namespace Music_Shop.Services
             string txnid = hash.ToString().Substring(0, 20);
             return txnid;
         }
-        private string Generatehash512(string text)
+        public string Generatehash512(string text)
         {
             byte[] message = Encoding.UTF8.GetBytes(text);
 

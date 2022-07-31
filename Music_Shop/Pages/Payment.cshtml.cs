@@ -14,14 +14,14 @@ namespace Music_Shop.Pages
     {
         private User _currentUser;
         private IUserService _userService;
-        private ITransactionService _transactionService;
+        private IOrderService _transactionService;
         private readonly IConfiguration _configuration;
         private readonly string _merchantKey;
         private readonly string _salt;
         private readonly string _payuBaseUrl;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PaymentModel(IUserService userService, ITransactionService transactionService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public PaymentModel(IUserService userService, IOrderService transactionService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
             _transactionService = transactionService;

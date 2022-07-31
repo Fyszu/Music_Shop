@@ -12,19 +12,19 @@ namespace Music_Shop.Repositories
         }
 
 
-        public async Task<Transaction> GetById(int id)
+        public async Task<Order> GetById(int id)
         {
             return await _context.Transactions.Include(transaction => transaction.Buyer).Include(transaction => transaction.Album).Where(t => t.Id == id).SingleOrDefaultAsync();
         }
-        public async Task Add(Transaction transaction)
+        public async Task Add(Order transaction)
         {
             if (transaction != null)
                 await _context.Transactions.AddAsync(transaction);
             await _context.SaveChangesAsync();
         }
-        public async Task Update(Transaction transaction)
+        public async Task Update(Order transaction)
         {
-            Transaction dbTransaction = _context.Transactions.Find(transaction.Id);
+            Order dbTransaction = _context.Transactions.Find(transaction.Id);
             if (dbTransaction != null)
             {
                 dbTransaction.Id = transaction.Id;
@@ -35,29 +35,29 @@ namespace Music_Shop.Repositories
             }
             await _context.SaveChangesAsync();
         }
-        public async Task Remove(Transaction transaction)
+        public async Task Remove(Order transaction)
         {
             if (transaction != null)
                 _context.Transactions.Remove(transaction);
             await _context.SaveChangesAsync();
         }
-        public async Task<List<Transaction>> GetAll()
+        public async Task<List<Order>> GetAll()
         {
             return await _context.Transactions.Include(transaction => transaction.Buyer).Include(transaction => transaction.Album).ToListAsync();
         }
-        public async Task<List<Transaction>> GetByBuyer(User buyer)
+        public async Task<List<Order>> GetByBuyer(User buyer)
         {
             return await _context.Transactions.Include(transaction => transaction.Buyer).Include(transaction => transaction.Album).Where(t => t.Buyer.Equals(buyer)).ToListAsync();
         }
-        public async Task<List<Transaction>> GetByAlbum(Album album)
+        public async Task<List<Order>> GetByAlbum(Album album)
         {
             return await _context.Transactions.Include(transaction => transaction.Buyer).Include(transaction => transaction.Album).Where(t => t.Album.Equals(album)).ToListAsync();
         }
-        public async Task<List<Transaction>> GetByDateTime(DateTime dateTime)
+        public async Task<List<Order>> GetByDateTime(DateTime dateTime)
         {
             return await _context.Transactions.Include(transaction => transaction.Buyer).Include(transaction => transaction.Album).Where(t => t.DateTime.Equals(dateTime)).ToListAsync();
         }
-        public async Task<List<Transaction>> GetByPrice(float price)
+        public async Task<List<Order>> GetByPrice(float price)
         {
             return await _context.Transactions.Include(transaction => transaction.Buyer).Include(transaction => transaction.Album).Where(t => t.Price.Equals(price)).ToListAsync();
         }

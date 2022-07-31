@@ -42,7 +42,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IAlbumService, AlbumService>();
 builder.Services.AddTransient<IArtistService, ArtistService>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<ITransactionService, TransactionService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddScoped<AlbumRepository, AlbumRepository>();
 builder.Services.AddScoped<ArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<UserRepository, UserRepository>();

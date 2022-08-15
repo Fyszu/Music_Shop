@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Music_Shop.Pages
 {
-    public class IndexModel : PageModel
+    public class MainModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly ILogger<MainModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public MainModel(ILogger<MainModel> logger)
         {
             _logger = logger;
         }

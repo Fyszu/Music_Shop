@@ -17,7 +17,7 @@ namespace Music_Shop.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Artist> Artists { get; set; }
-        public DbSet<Order> Transactions { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

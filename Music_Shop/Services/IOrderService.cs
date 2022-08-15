@@ -5,10 +5,9 @@ namespace Music_Shop.Services
     public interface IOrderService : IService<Order, int>
     {
         Task<List<Order>> GetByBuyer(User buyer);
-        Task<List<Order>> GetByAlbum(Album album);
-        Task<List<Order>> GetByDateTime(DateTime dateTime);
-        Task<List<Order>> GetByPrice(float price);
-        public InternalResponse GetBearerToken();
-        public InternalResponse OrderRequest(Order order, string bearerAuth);
+        Task<List<Order>> GetByDate(DateTime dateTime);
+        Task<List<Order>> GetBetweenTwoDates(DateTime from, DateTime to);
+        Task<List<Order>> GetByPrice(int price);
+        public string GetPaymentRedirectionUrl(Order order);
     }
 }

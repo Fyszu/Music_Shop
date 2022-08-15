@@ -14,7 +14,7 @@ namespace Music_Shop.Repositories
 
         public async Task<Album> GetById(int id)
         {
-            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).Where(album => album.Id == id).SingleOrDefaultAsync();
+            return await _context.Albums.Include(album => album.Artists).Include(a => a.Orders).Where(album => album.Id == id).SingleOrDefaultAsync();
         }
 
         public async Task Add(Album album)
@@ -30,10 +30,11 @@ namespace Music_Shop.Repositories
             if (dbAlbum != null)
             {
                 dbAlbum.Id = album.Id;
-                dbAlbum.Owner = album.Owner;
+                dbAlbum.Artists = album.Artists;
                 dbAlbum.Name = album.Name;
                 dbAlbum.Description = album.Description;
                 dbAlbum.Price = album.Price;
+                dbAlbum.Orders = album.Orders;
             }
             await _context.SaveChangesAsync();
         }
@@ -47,22 +48,25 @@ namespace Music_Shop.Repositories
 
         public async Task<List<Album>> GetAll()
         {
-            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).ToListAsync();
+            return await _context.Albums.Include(album => album.Artists).Include(a => a.Orders).ToListAsync();
         }
 
         public async Task<Album> GetByName(string name)
         {
-            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).Where(a => a.Name == name).SingleOrDefaultAsync();
+            return await _context.Albums.Include(album => album.Artists).Include(a => a.Orders).Where(a => a.Name == name).SingleOrDefaultAsync();
         }
 
-        public async Task<List<Album>> GetByOwner(Artist owner)
+        public async Task<List<Album>> GetByArtists(HashSet<Artist> artists)
         {
-            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).Where(album => album.Owner.Equals(owner)).ToListAsync();
+            List<Album> albums = new();
+            foreach (Artist artist in artists)
+                albums.Add(await _context.Albums.Include(album => album.Artists).Include(a => a.Orders).Where(album => album.Artists.Contains(artist)).FirstOrDefaultAsync());
+            return albums;
         }
 
         public async Task<List<Album>> GetByPrice(float price)
         {
-            return await _context.Albums.Include(album => album.Owner).Include(a => a.Transactions).Where(album => album.Price == price).ToListAsync();
+            return await _context.Albums.Include(album => album.Artists).Include(a => a.Orders).Where(album => album.Price == price).ToListAsync();
         }
     }
 }

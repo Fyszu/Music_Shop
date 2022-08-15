@@ -21,7 +21,7 @@ namespace Music_Shop.Services
         public async Task Remove(Album album) { await _repository.Remove(album); }
         public async Task<List<Album>> GetAll() { return await _repository.GetAll(); }
         public async Task<Album> GetByName(string name) { return await _repository.GetByName(name); }
-        public async Task<List<Album>> GetByOwner(Artist owner) { return await _repository.GetByOwner(owner); }
+        public async Task<List<Album>> GetByArtists(HashSet<Artist> artists) { return await _repository.GetByArtists(artists); }
         public async Task<List<Album>> GetByPrice(float price) { return await _repository.GetByPrice(price); }
     }
 }

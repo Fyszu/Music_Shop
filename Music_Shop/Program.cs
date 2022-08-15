@@ -46,7 +46,7 @@ builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddScoped<AlbumRepository, AlbumRepository>();
 builder.Services.AddScoped<ArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<UserRepository, UserRepository>();
-builder.Services.AddScoped<TransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<OrderRepository, OrderRepository>();
 
 builder.Services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddRazorPages();
@@ -61,6 +61,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseExceptionHandler("/Error"); // to removal
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -71,7 +72,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}" );
+    pattern: "{controller=Home}/{action=Main}/{id?}" );
 
 app.MapRazorPages();
 

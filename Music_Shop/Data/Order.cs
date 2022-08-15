@@ -16,14 +16,14 @@ namespace Music_Shop.Data
         public User Buyer { get; set; }
         public ICollection<Product> Products { get; set; } = new HashSet<Product>();
         public DateTime OrderDateTime { get; set; }
-        public int GetTotalPrice()
-        {
-            int result = 0;
-            foreach(Product product in Products)
-            {
-                result += product.TotalPrice;
+        public int TotalPrice { get {
+                int result = 0;
+                foreach (Product product in Products)
+                {
+                    result += product.TotalPrice;
+                }
+                return result;
             }
-            return result;
         }
     }
 }

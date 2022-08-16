@@ -34,7 +34,6 @@ namespace Music_Shop.Repositories
                 dbOrder.Buyer = order.Buyer;
                 dbOrder.Products = order.Products;
                 dbOrder.CustomerIp = order.CustomerIp;
-                dbOrder.Description = order.Description;
                 dbOrder.OrderDateTime = order.OrderDateTime;
             }
             await _context.SaveChangesAsync();

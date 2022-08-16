@@ -125,14 +125,24 @@ namespace Music_Shop.Services
                 ""customerIp"": """ + order.CustomerIp + @""",
                 ""merchantPosId"": """ + _configuration.GetValue<int>("MerchantPosId") + @""",
                 ""description"": """ + order.Description + @""",
+                ""additionalDescription"": """ + order.AdditionalDescription + @""",
                 ""currencyCode"": """ + order.Currency + @""",
                 ""totalAmount"": """ + order.TotalPrice + @""",
+                ""continueUrl"": """ + _configuration.GetValue<string>("ReturnPage") +@""",
                 ""buyer"": {
                     ""email"": """ + order.Buyer.Email + @""",
                     ""phone"": """ + order.Buyer.Phone + @""",
                     ""firstName"": """ + order.Buyer.FirstName + @""",
                     ""lastName"": """ + order.Buyer.LastName + @""",
-                    ""language"": """ + order.Buyer.Language + @"""
+                    ""language"": """ + order.Buyer.Language + @""",
+                    ""delivery"": {
+                        ""street"": """ + order.Buyer.Street + @""",
+                        ""postalCode"": """ + order.Buyer.PostalCode + @""",
+                        ""city"": """ + order.Buyer.City + @""",
+                        ""recipientName"": """ + order.Buyer.FirstName + " " + order.Buyer.LastName + @""",
+                        ""recipientEmail"": """ + order.Buyer.Email + @""",
+                        ""recipientPhone"": """ + order.Buyer.Phone + @"""
+                    }
                 },
                 ";
 

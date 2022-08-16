@@ -10,7 +10,16 @@ namespace Music_Shop.Data
         [Required]
         public string CustomerIp { get; set; }
         [Required]
-        public string Description { get; set; }
+        public string Description { get { return $"Zamówienie nr. {this.Id}"; } }
+        public string AdditionalDescription {
+            get {
+                string additionalDescription = string.Empty;
+                int productNumber = 1;
+                foreach(Product product in Products)
+                    additionalDescription += $"Produkt nr. {productNumber}: ID: {product.Id}, {product.Name} ({product.Description}), ilość: {product.Quantity}.   ";
+                return additionalDescription;
+            }
+        }
         public string Currency { get; set; } = "PLN";
         [ForeignKey("UserId")]
         public User Buyer { get; set; }

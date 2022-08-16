@@ -33,6 +33,9 @@ namespace Music_Shop.Repositories
                 dbUser.UserName = user.UserName;
                 dbUser.PasswordHash = user.PasswordHash;
                 dbUser.Id = user.Id;
+                dbUser.Street = user.Street;
+                dbUser.City = user.City;
+                dbUser.PostalCode = user.PostalCode;
             }
             await _context.SaveChangesAsync();
         }

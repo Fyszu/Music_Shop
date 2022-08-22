@@ -147,7 +147,7 @@ namespace Music_Shop.Services
                 ";
 
             httpRequestData += @"""products"": [";
-            foreach (Product product in order.Products)
+            foreach (CartItem product in order.Products)
             {
                 httpRequestData += @"
                     {

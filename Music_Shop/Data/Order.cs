@@ -15,7 +15,7 @@ namespace Music_Shop.Data
             get {
                 string additionalDescription = string.Empty;
                 int productNumber = 1;
-                foreach(Product product in Products)
+                foreach(CartItem product in Products)
                     additionalDescription += $"Produkt nr. {productNumber}: ID: {product.Id}, {product.Name} ({product.Description}), ilość: {product.Quantity}.   ";
                 return additionalDescription;
             }
@@ -27,7 +27,7 @@ namespace Music_Shop.Data
         public DateTime OrderDateTime { get; set; }
         public int TotalPrice { get {
                 int result = 0;
-                foreach (Product product in Products)
+                foreach (CartItem product in Products)
                 {
                     result += product.TotalPrice;
                 }

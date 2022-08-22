@@ -16,5 +16,6 @@ namespace Music_Shop.Data
         public string PostalCode { get; set; }
         public string Language { get; set; } = "pl";
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+        public Cart Cart { get; set; }
     }
 }

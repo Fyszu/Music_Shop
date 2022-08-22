@@ -43,13 +43,24 @@ builder.Services.AddTransient<IAlbumService, AlbumService>();
 builder.Services.AddTransient<IArtistService, ArtistService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<ICartService, CartService>();
 builder.Services.AddScoped<AlbumRepository, AlbumRepository>();
 builder.Services.AddScoped<ArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<UserRepository, UserRepository>();
 builder.Services.AddScoped<OrderRepository, OrderRepository>();
+builder.Services.AddScoped<CartRepository, CartRepository>();
 
 builder.Services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddRazorPages();
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromDays(3);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -69,6 +80,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

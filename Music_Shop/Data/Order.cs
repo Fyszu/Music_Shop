@@ -23,7 +23,7 @@ namespace Music_Shop.Data
         public string Currency { get; set; } = "PLN";
         [ForeignKey("UserId")]
         public User Buyer { get; set; }
-        public ICollection<Product> Products { get; set; } = new HashSet<Product>();
+        public ICollection<CartItem> Products { get; set; } = new HashSet<CartItem>();
         public DateTime OrderDateTime { get; set; }
         public int TotalPrice { get {
                 int result = 0;

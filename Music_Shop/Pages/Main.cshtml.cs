@@ -14,7 +14,7 @@ namespace Music_Shop.Pages
 
         public void OnGet()
         {
-
+            
         }
     }
 }

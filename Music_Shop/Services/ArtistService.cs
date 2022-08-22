@@ -22,6 +22,5 @@ namespace Music_Shop.Services
         public async Task<List<Artist>> GetAll() { return await _repository.GetAll(); }
         public async Task<Artist> GetByName(string name) { return await _repository.GetByName(name); }
         public async Task<Artist> GetByAlbum(Album album) { return await _repository.GetByAlbum(album); }
-
     }
 }

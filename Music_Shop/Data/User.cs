@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Music_Shop.Data
 {
@@ -16,6 +17,7 @@ namespace Music_Shop.Data
         public string PostalCode { get; set; }
         public string Language { get; set; } = "pl";
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+        [ForeignKey("CartId")]
         public Cart Cart { get; set; }
     }
 }

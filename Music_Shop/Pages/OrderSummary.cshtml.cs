@@ -12,7 +12,7 @@ namespace Music_Shop.Pages
         private readonly IOrderService _orderService;
         private readonly IUserService _userService;
         private readonly ICartService _cartService;
-        public OrderSummaryModel(IOrderService orderService, IUserService userService, CartService cartService)
+        public OrderSummaryModel(IOrderService orderService, IUserService userService, ICartService cartService)
         {
             _orderService = orderService;
             _userService = userService;

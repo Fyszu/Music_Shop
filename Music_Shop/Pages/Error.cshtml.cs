@@ -21,8 +21,9 @@ namespace Music_Shop.Pages
 
             var exceptionHandlerPathFeature =
                 HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-
-            if (exceptionHandlerPathFeature.Error is JsonDeserializationException)
+            if (exceptionHandlerPathFeature is null)
+                ExceptionMessage = "Error has occured.";
+            else if (exceptionHandlerPathFeature.Error is JsonDeserializationException)
                 ExceptionMessage = $"JSON deserialization problem. \n{exceptionHandlerPathFeature.Error.Message}";
             else if (exceptionHandlerPathFeature.Error is HttpResponseException)
                 ExceptionMessage = "Getting bearer token has failed - HttpResponseException has been thrown. " +
